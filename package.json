@@ -1,7 +1,7 @@
 {
   "name": "hkts",
   "version": "0.0.2",
-  "description": "An experimental approach to higher-kinded types in TypeScript",
+  "description": "A simple encoding of higher-kinded types in TypeScript",
   "keywords:": [
     "typescript",
     "higher",
