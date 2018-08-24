@@ -13,6 +13,7 @@
     "typescript": "^3.0.1"
   },
   "scripts": {
+    "build": "tsc",
     "test": "jest"
   }
 }
