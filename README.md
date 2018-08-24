@@ -1,6 +1,6 @@
 # HKTS - Higher-Kinded Types in TypeScript [![Build Status](https://travis-ci.com/pelotom/hkts.svg?branch=master)](https://travis-ci.com/pelotom/hkts)
 
-TypeScript [doesn't really support higher-kinded types yet](https://github.com/Microsoft/TypeScript/issues/1213), but various attempts have been made to simulate them. This project is one such idea, which attempts to solve the problem via conditional types.
+TypeScript [doesn't really support higher-kinded types yet](https://github.com/Microsoft/TypeScript/issues/1213), but various attempts have been made to simulate them (see [Prior Work](https://github.com/pelotom/hkts/blob/master/README.md#prior-work) at the bottom). This project is one such idea, which attempts to solve the problem via conditional types.
 
 The idea is that a type which logically depends on a type constructor (rather than a simple type) just takes a regular type variable, and then uses the `$` operator to "apply" that variable to other types:
 
@@ -23,7 +23,9 @@ The `$` operator recursively walks the tree of the first type passed to it, subs
 
 This is just a proof of concept at the moment; use at your own risk!
 
-## Other notable attempts to solve this problem:
+## Prior Work
+
+Other notable attempts to solve this problem:
 
 - https://medium.com/@gcanti/higher-kinded-types-in-typescript-static-and-fantasy-land-d41c361d0dbe
 - https://github.com/SimonMeskens/TypeProps
