@@ -1,4 +1,4 @@
-# HKTS - Higher-Kinded Types in TypeScript
+# HKTS - Higher-Kinded Types in TypeScript [![Build Status](https://travis-ci.com/pelotom/hkts.svg?branch=master)](https://travis-ci.com/pelotom/hkts)
 
 TypeScript [doesn't really support higher-kinded types yet](https://github.com/Microsoft/TypeScript/issues/1213), but it's possible to simulate them--[Giulio Canti](https://github.com/gcanti) [has demonstrated one such approach](https://medium.com/@gcanti/higher-kinded-types-in-typescript-static-and-fantasy-land-d41c361d0dbe). This project is another idea, which attempts to solve the problem via conditional types.
 
