@@ -10,7 +10,7 @@ interface Functor<F> {
 }
 ```
 
-Then, to make an instance of this "type class", we supply it with a version of our higher-kinded type which has been saturated with type variables (`_`):
+Then, to make an instance of this "type class", we supply it with a version of our higher-kinded type which has been saturated with type "variables" (`_`):
 
 ```ts
 type Maybe<A> = { tag: 'none' } | { tag: 'some'; value: A };
