@@ -1,4 +1,11 @@
 {
+  "name": "hkts",
+  "version": "0.0.0",
+  "description": "An experimental approach to higher-kinded types in TypeScript",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "author": "Thomas Crockett",
+  "license": "MIT",
   "devDependencies": {
     "@types/jest": "^23.3.1",
     "jest": "^23.5.0",
