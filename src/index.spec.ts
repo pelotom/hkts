@@ -1,5 +1,15 @@
 import { Monad, _ } from ".";
 
+it('array', () => {
+  const { map, flatten } = Monad<_[]>({
+    pure: x => [x],
+    bind: (xs, f) => xs.map(f).reduce((xs, ys) => xs.concat(ys), []),
+  });
+
+  const result = map(flatten<number>([[42]]), n => n + 1);
+  expect(result).toEqual([43]);
+});
+
 it('maybe', () => {
   type Maybe<A> = { tag: 'none' } | { tag: 'some'; value: A };
   const none: Maybe<never> = { tag: 'none' };

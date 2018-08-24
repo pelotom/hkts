@@ -2,10 +2,12 @@ declare const index: unique symbol;
 
 export type _<N extends number = 0> = { [index]: N };
 
+export interface $Array<T, S, N extends number> extends Array<$<T, S, N>> {}
+
 export type $<T, S, N extends number = 0> =
   T extends _<N> ? S :
-  T extends number | string | boolean | symbol ? T :
-  // T extends (infer A)[] ? $<A, S, N>[] : <-- why doesn't this work?
+  T extends undefined | null | boolean | string | number ? T :
+  T extends Array<infer A> ? $Array<A, S, N> :
   T extends (x: infer I) => infer O ? (x: $<I, S, N>) => $<O, S, N> :
   T extends object ? { [K in keyof T]: $<T[K], S, N> } : T;
 
