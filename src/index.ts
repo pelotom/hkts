@@ -1,9 +1,9 @@
 declare const index: unique symbol;
 
+// A type for representing type variables
 export type _<N extends number = 0> = { [index]: N };
 
-export interface $Array<T, S, N extends number> extends Array<$<T, S, N>> {}
-
+// Type application (substitutes type variables with types)
 // prettier-ignore
 export type $<T, S, N extends number = 0> =
   T extends _<N> ? S :
@@ -11,6 +11,10 @@ export type $<T, S, N extends number = 0> =
   T extends Array<infer A> ? $Array<A, S, N> :
   T extends (x: infer I) => infer O ? (x: $<I, S, N>) => $<O, S, N> :
   T extends object ? { [K in keyof T]: $<T[K], S, N> } : T;
+
+export interface $Array<T, S, N extends number> extends Array<$<T, S, N>> {}
+
+// Some familiar type classes...
 
 export interface Functor<F> {
   map: <A, B>(fa: $<F, A>, f: (a: A) => B) => $<F, B>;
