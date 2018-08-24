@@ -21,4 +21,4 @@ const MaybeF: Functor<Maybe<_>> = {
 
 The `$` operator recursively walks the tree of the first type passed to it, substituting `_`s wherever it finds them with the second type passed to it. That's all there is to it!
 
-This is just a proof of concept; use at your own risk!
+This is just a proof of concept at the moment; use at your own risk!
