@@ -4,6 +4,7 @@ export type _<N extends number = 0> = { [index]: N };
 
 export interface $Array<T, S, N extends number> extends Array<$<T, S, N>> {}
 
+// prettier-ignore
 export type $<T, S, N extends number = 0> =
   T extends _<N> ? S :
   T extends undefined | null | boolean | string | number ? T :
