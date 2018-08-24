@@ -15,6 +15,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "jest"
+    "format": "prettier $([ \"$CI\" == true ] && echo --list-different || echo --write) './**/*.{ts,tsx,js,json,css}'",
+    "test": "jest $([ \"$CI\" == true ] && echo --no-cache --verbose --coverage)"
   }
 }
