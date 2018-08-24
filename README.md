@@ -1,6 +1,6 @@
 # HKTS - Higher-Kinded Types in TypeScript
 
-TypeScript [doesn't really support higher-kinded types yet](https://github.com/Microsoft/TypeScript/issues/1213), but it's possible to simulate them--[Giulio Canti](https://github.com/gcanti) [has demonstrated one such approach](https://medium.com/@gcanti/higher-kinded-types-in-typescript-static-and-fantasy-land-d41c361d0dbe). This project is another idea, which attempts to leverage conditional types.
+TypeScript [doesn't really support higher-kinded types yet](https://github.com/Microsoft/TypeScript/issues/1213), but it's possible to simulate them--[Giulio Canti](https://github.com/gcanti) [has demonstrated one such approach](https://medium.com/@gcanti/higher-kinded-types-in-typescript-static-and-fantasy-land-d41c361d0dbe). This project is another idea, which attempts to solve the problem via conditional types.
 
 The idea is that a type which logically depends on a type constructor (rather than a simple type) just takes a regular type variable, and then uses the `$` operator to "apply" that variable to other types:
 
