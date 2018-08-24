@@ -26,7 +26,7 @@ export interface Monad<M> {
 }
 
 export interface MonadLib<M> extends Monad<M>, Functor<M> {
-  flatten: <A>(mma: $<M, $<M, A>>) => $<M, A>;
+  join: <A>(mma: $<M, $<M, A>>) => $<M, A>;
   // sequence, etc...
 }
 
@@ -34,5 +34,5 @@ export const Monad = <M>({ pure, bind }: Monad<M>): MonadLib<M> => ({
   pure,
   bind,
   map: (ma, f) => bind(ma, a => pure(f(a))),
-  flatten: mma => bind(mma, ma => ma),
+  join: mma => bind(mma, ma => ma),
 });
