@@ -10,7 +10,8 @@ export type $<T, S, N extends number = 0> =
   T extends undefined | null | boolean | string | number ? T :
   T extends Array<infer A> ? $Array<A, S, N> :
   T extends (x: infer I) => infer O ? (x: $<I, S, N>) => $<O, S, N> :
-  T extends object ? { [K in keyof T]: $<T[K], S, N> } : T;
+  T extends object ? { [K in keyof T]: $<T[K], S, N> } :
+  T;
 
 export interface $Array<T, S, N extends number> extends Array<$<T, S, N>> {}
 
