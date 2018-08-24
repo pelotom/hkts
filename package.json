@@ -2,6 +2,12 @@
   "name": "hkts",
   "version": "0.0.1",
   "description": "An experimental approach to higher-kinded types in TypeScript",
+  "keywords:": [
+    "typescript",
+    "higher",
+    "kinded",
+    "types"
+  ],
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "author": "Thomas Crockett",
