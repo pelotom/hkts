@@ -1,4 +1,4 @@
-import { Monad, _ } from '.';
+import { Bifunctor, Monad, _ } from '.';
 
 it('array', () => {
   const { map, join } = Monad<_[]>({
@@ -45,4 +45,25 @@ it('list', () => {
 
   const result = map(join<number>(cons(cons(42))), n => n + 1);
   expect(result).toEqual(cons(43));
+});
+
+it('either', () => {
+  type Either<A, B> = { tag: 'left'; left: A } | { tag: 'right'; right: B };
+  const left = <A>(left: A): Either<A, never> => ({ tag: 'left', left });
+  const right = <B>(right: B): Either<never, B> => ({ tag: 'right', right });
+
+  const { bimap } = Bifunctor<Either<_, _<1>>>({
+    bimap: (fab, f, g) => (fab.tag === 'left' ? left(f(fab.left)) : right(g(fab.right))),
+  });
+
+  const l = (x: number): boolean => !(x % 2);
+  const r = (y: boolean): string => String(y);
+
+  const input1: Either<number, boolean> = left(2);
+  const result1 = bimap(input1, l, r);
+  expect(result1).toEqual(left(true));
+
+  const input2: Either<number, boolean> = right(true);
+  const result2 = bimap(input2, l, r);
+  expect(result2).toEqual(right('true'));
 });
