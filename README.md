@@ -6,11 +6,11 @@ The idea is that a type which logically depends on a type constructor (rather th
 
 ```ts
 interface Functor<F> {
-  map: <A, B>(fa: $<F, A>, f: (a: A) => B) => $<F, B>;
-}
+  map: <A, B>(fa: $<F, [A]>, f: (a: A) => B) => $<F, [B]>;
+}}
 ```
 
-Then, to make an instance of this "type class", we supply it with a version of our higher-kinded type which has been saturated with type "variables" (`_`):
+Then, to make an instance of this "type class", we supply it with a version of our higher-kinded type which has been saturated with placeholders (`_`) representing type "variables":
 
 ```ts
 type Maybe<A> = { tag: 'none' } | { tag: 'some'; value: A };
@@ -19,7 +19,9 @@ const MaybeF: Functor<Maybe<_>> = {
 };
 ```
 
-The `$` operator recursively walks the tree of the first type passed to it, substituting `_`s wherever it finds them in the second type passed to it. That's all there is to it! Take a look at [the tests](https://github.com/pelotom/hkts/blob/master/src/index.spec.ts) for more examples.
+A type application `$<T, [S_0, S_1, ..., S_N]>` recursively walks the tree of type `T`, substituting any placeholders `_<N>` it finds with the corresponding argument type `S_N`. `_` is shorthand for `_<0>`.
+
+That's pretty much all there is to it! Take a look at [the tests](https://github.com/pelotom/hkts/blob/master/src/index.spec.ts) for more examples.
 
 This is just a proof of concept at the moment; use at your own risk!
 
