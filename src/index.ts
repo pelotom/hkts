@@ -2,6 +2,16 @@ declare const index: unique symbol;
 
 // Placeholders representing indexed type variables
 export type _<N extends number = 0> = { [index]: N };
+export type _0 = _<0>;
+export type _1 = _<1>;
+export type _2 = _<2>;
+export type _3 = _<3>;
+export type _4 = _<4>;
+export type _5 = _<5>;
+export type _6 = _<6>;
+export type _7 = _<7>;
+export type _8 = _<8>;
+export type _9 = _<9>;
 
 // Type application (simultaneously substitutes all placeholders within the target type)
 // prettier-ignore

@@ -19,7 +19,7 @@ const MaybeF: Functor<Maybe<_>> = {
 };
 ```
 
-A type application `$<T, [S_0, S_1, ..., S_N]>` recursively walks the tree of type `T`, substituting any placeholders `_<N>` it finds with the corresponding argument type `S_N`. `_` is shorthand for `_<0>`.
+A type application `$<T, [S_0, S_1, ..., S_N]>` recursively walks the tree of type `T`, substituting any placeholders `_<N>` it finds with the corresponding argument type `S_N`. `_` is shorthand for `_<0>`, and there are also placeholder aliases `_0 = _<0>`, `_1 = _<1>`, etc.
 
 That's pretty much all there is to it! Take a look at [the tests](https://github.com/pelotom/hkts/blob/master/src/index.spec.ts) for more examples.
 

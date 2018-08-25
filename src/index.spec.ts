@@ -1,4 +1,4 @@
-import { Bifunctor, Monad, _ } from '.';
+import { Bifunctor, Monad, _, _1, _0 } from '.';
 
 it('array', () => {
   const { map, join } = Monad<_[]>({
@@ -52,7 +52,7 @@ it('either', () => {
   const left = <A>(left: A): Either<A, never> => ({ tag: 'left', left });
   const right = <B>(right: B): Either<never, B> => ({ tag: 'right', right });
 
-  const { bimap } = Bifunctor<Either<_, _<1>>>({
+  const { bimap } = Bifunctor<Either<_0, _1>>({
     bimap: (fab, f, g) => (fab.tag === 'left' ? left(f(fab.left)) : right(g(fab.right))),
   });
 
