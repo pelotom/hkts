@@ -1,6 +1,6 @@
 {
   "name": "hkts",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A simple encoding of higher-kinded types in TypeScript",
   "keywords:": [
     "typescript",
