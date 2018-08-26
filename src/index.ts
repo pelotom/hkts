@@ -3,7 +3,9 @@ declare const index: unique symbol;
 /**
  * Placeholder representing an indexed type variable.
  */
-export type _<N extends number = 0> = { [index]: N };
+export interface _<N extends number = 0> {
+  [index]: N;
+}
 export type _0 = _<0>;
 export type _1 = _<1>;
 export type _2 = _<2>;
@@ -21,7 +23,9 @@ declare const fixed: unique symbol;
  * Marks a type to be ignored by the application operator `$`. This is used to protect
  * bound type parameters.
  */
-export type Fixed<T> = { [fixed]: T };
+export interface Fixed<T> {
+  [fixed]: T;
+}
 
 /**
  * Type application (simultaneously substitutes all placeholders within the target type)
