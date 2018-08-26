@@ -72,8 +72,7 @@ describe('either', () => {
       });
 
     const either: Either<string, number> = right(42);
-
-    const result = RightMonad<number>().map(right(42), n => n + 1);
+    const result = RightMonad<string>().map(either, n => n + 1);
     expect(result).toEqual(right(43));
   });
 });
