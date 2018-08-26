@@ -1,6 +1,8 @@
 declare const index: unique symbol;
 
-// Placeholders representing indexed type variables
+/**
+ * Placeholder representing an indexed type variable.
+ */
 export type _<N extends number = 0> = { [index]: N };
 export type _0 = _<0>;
 export type _1 = _<1>;
@@ -14,9 +16,16 @@ export type _8 = _<8>;
 export type _9 = _<9>;
 
 declare const ignore: unique symbol;
+
+/**
+ * Marks a type to be ignored by the application operator `$`. This is used to protect
+ * bound type parameters.
+ */
 export type Ignore<T> = { [ignore]: T };
 
-// Type application (simultaneously substitutes all placeholders within the target type)
+/**
+ * Type application (simultaneously substitutes all placeholders within the target type)
+ */
 // prettier-ignore
 export type $<T, S extends any[]> =
   T extends Ignore<infer U> ? U :
