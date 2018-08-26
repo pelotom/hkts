@@ -17,12 +17,7 @@ it('maybe', () => {
 
   const { map, join } = Monad<Maybe<_>>({
     pure: some,
-    bind: (ma, f) => {
-      if (ma.tag === 'none') return none;
-      const mb = f(ma.value);
-      if (mb.tag === 'none') return none;
-      return some(mb.value);
-    },
+    bind: (ma, f) => (ma.tag === 'some' ? f(ma.value) : ma),
   });
 
   const result = map(join<number>(some(some(42))), n => n + 1);
