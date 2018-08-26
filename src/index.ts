@@ -15,20 +15,20 @@ export type _7 = _<7>;
 export type _8 = _<8>;
 export type _9 = _<9>;
 
-declare const ignore: unique symbol;
+declare const fixed: unique symbol;
 
 /**
  * Marks a type to be ignored by the application operator `$`. This is used to protect
  * bound type parameters.
  */
-export type Ignore<T> = { [ignore]: T };
+export type Fixed<T> = { [fixed]: T };
 
 /**
  * Type application (simultaneously substitutes all placeholders within the target type)
  */
 // prettier-ignore
 export type $<T, S extends any[]> =
-  T extends Ignore<infer U> ? U :
+  T extends Fixed<infer U> ? U :
   T extends _<infer N> ? S[N] :
   T extends undefined | null | boolean | string | number ? T :
   T extends Array<infer A> ? $Array<A, S> :

@@ -1,4 +1,4 @@
-import { Bifunctor, Monad, _, _1, _0, Functor, $, Ignore } from '.';
+import { Bifunctor, Monad, _, _1, _0, Functor, $, Fixed } from '.';
 
 it('array', () => {
   const { map, join } = Monad<_[]>({
@@ -66,7 +66,7 @@ describe('either', () => {
 
   it('monad', () => {
     const RightMonad = <L>() =>
-      Monad<Either<Ignore<L>, _>>({
+      Monad<Either<Fixed<L>, _>>({
         pure: right,
         bind: (ma, f) => (ma.tag === 'left' ? ma : f(ma.right)),
       });
