@@ -23,7 +23,7 @@ export type $<T, S extends any[]> =
   T extends _<infer N> ? S[N] :
   T extends undefined | null | boolean | string | number ? T :
   T extends Array<infer A> ? $Array<A, S> :
-  T extends (x: infer I) => infer O ? (x: $<I, S>) => $<O, S> :
+  T extends (...x: infer I) => infer O ? (...x: $<I, S>) => $<O, S> :
   T extends object ? { [K in keyof T]: $<T[K], S> } :
   T;
 
