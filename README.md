@@ -5,9 +5,9 @@ TypeScript [doesn't really support higher-kinded types yet](https://github.com/M
 The idea is that a type which logically depends on a type constructor (rather than a simple type) just takes a regular type variable, and then uses the `$` operator to "apply" that variable to other types:
 
 ```ts
-interface Functor<F> {
-  map: <A, B>(fa: $<F, [A]>, f: (a: A) => B) => $<F, [B]>;
-}}
+interface Functor<T> {
+  map: <A, B>(f: (x: A) => B, t: $<T, [A]>) => $<T, [B]>;
+}
 ```
 
 Then, to make an instance of this "type class", we supply it with a version of our higher-kinded type which has been saturated with placeholders (`_`) representing type "variables":
