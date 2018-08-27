@@ -35,11 +35,70 @@ export type $<T, S extends any[]> = Unpack<
   T extends Fixed<infer U> ? { [pack]: U } :
   T extends _<infer N> ? { [pack]: S[N] } :
   T extends undefined | null | boolean | string | number ? { [pack]: T } :
-  T extends Array<infer A> ? { [pack]: $<A, S>[] } :
+  T extends (infer A)[] ? {
+    [pack]: T extends { length: keyof TupleTable }
+      ? TupleTable<T, S>[T['length']]
+      : $<A, S>[]
+  } :
   T extends (...x: infer I) => infer O ? { [pack]: (...x: $<I, S>) => $<O, S> } :
   T extends object ? { [pack]: { [K in keyof T]: $<T[K], S> } } :
   { [pack]: T }
 >;
+
+// prettier-ignore
+type TupleTable<T extends any[] = any, S extends any[] = any> = {
+  0: [];
+  1: T extends [
+      infer A0
+    ] ? [
+      $<A0, S>
+    ] : never
+  2: T extends [
+      infer A0, infer A1
+    ] ? [
+      $<A0, S>, $<A1, S>
+    ] : never
+  3: T extends [
+      infer A0, infer A1, infer A2
+    ] ? [
+      $<A0, S>, $<A1, S>, $<A2, S>
+    ] : never
+  4: T extends [
+      infer A0, infer A1, infer A2, infer A3
+    ] ? [
+      $<A0, S>, $<A1, S>, $<A2, S>, $<A3, S>
+    ] : never
+  5: T extends [
+      infer A0, infer A1, infer A2, infer A3, infer A4
+    ] ? [
+      $<A0, S>, $<A1, S>, $<A2, S>, $<A3, S>, $<A4, S>
+    ] : never
+  6: T extends [
+      infer A0, infer A1, infer A2, infer A3, infer A4, infer A5
+    ] ? [
+      $<A0, S>, $<A1, S>, $<A2, S>, $<A3, S>, $<A4, S>, $<A5, S>
+    ] : never
+  7: T extends [
+      infer A0, infer A1, infer A2, infer A3, infer A4, infer A5, infer A6
+    ] ? [
+      $<A0, S>, $<A1, S>, $<A2, S>, $<A3, S>, $<A4, S>, $<A5, S>, $<A6, S>
+    ] : never
+  8: T extends [
+      infer A0, infer A1, infer A2, infer A3, infer A4, infer A5, infer A6, infer A7
+    ] ? [
+      $<A0, S>, $<A1, S>, $<A2, S>, $<A3, S>, $<A4, S>, $<A5, S>, $<A6, S>, $<A7, S>
+    ] : never
+  9: T extends [
+      infer A0, infer A1, infer A2, infer A3, infer A4, infer A5, infer A6, infer A7, infer A8
+    ] ? [
+      $<A0, S>, $<A1, S>, $<A2, S>, $<A3, S>, $<A4, S>, $<A5, S>, $<A6, S>, $<A7, S>, $<A8, S>
+    ] : never
+  10: T extends [
+      infer A0, infer A1, infer A2, infer A3, infer A4, infer A5, infer A6, infer A7, infer A8, infer A9
+    ] ? [
+      $<A0, S>, $<A1, S>, $<A2, S>, $<A3, S>, $<A4, S>, $<A5, S>, $<A6, S>, $<A7, S>, $<A8, S>, $<A9, S>
+    ] : never
+}
 
 declare const pack: unique symbol;
 type Unpack<T extends { [pack]: any }> = T[typeof pack];
