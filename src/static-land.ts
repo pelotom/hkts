@@ -1,4 +1,4 @@
-import { $, _, Fixed } from '.';
+import { $, Fixed, _ } from '.';
 
 export interface Setoid<T> {
   equals: (x: T, y: T) => boolean;
@@ -33,7 +33,7 @@ export interface Filterable<T> {
 }
 
 export interface Functor<T> {
-  map: <A, B>(f: (x: A) => B, ta: $<T, [A]>) => $<T, [B]>;
+  map: <A, B>(f: (x: A) => B, t: $<T, [A]>) => $<T, [B]>;
 }
 export const Functor = <T>(spec: Functor<T>): Functor<T> => spec;
 
@@ -67,9 +67,9 @@ export interface Apply<T> extends Functor<T> {
 export interface Applicative<T> extends Apply<T> {
   of: <A>(x: A) => $<T, [A]>;
 }
-export const Applicative = <T>(A: Pick<Applicative<T>, 'ap' | 'of'>): Applicative<T> => ({
-  ...A,
-  map: (f, u) => A.ap(A.of(f), u),
+export const Applicative = <T>(spec: Pick<Applicative<T>, 'ap' | 'of'>): Applicative<T> => ({
+  ...spec,
+  map: (f, u) => spec.ap(spec.of(f), u),
 });
 
 export interface Alt<T> extends Functor<T> {
@@ -85,9 +85,9 @@ export interface Alternative<T> extends Applicative<T>, Plus<T> {}
 export interface Chain<T> extends Apply<T> {
   chain: <A, B>(f: (x: A) => $<T, [B]>, t: $<T, [A]>) => $<T, [B]>;
 }
-export const Chain = <T>(A: Pick<Chain<T>, 'chain'> & Pick<Functor<T>, 'map'>): Chain<T> => ({
-  ...A,
-  ap: (uf, ux) => A.chain(f => A.map(f, ux), uf),
+export const Chain = <T>(spec: Pick<Chain<T>, 'chain'> & Pick<Functor<T>, 'map'>): Chain<T> => ({
+  ...spec,
+  ap: (uf, ux) => spec.chain(f => spec.map(f, ux), uf),
 });
 
 export interface Monad<T> extends Applicative<T>, Chain<T> {
