@@ -31,20 +31,29 @@ export interface Fixed<T> {
  * Type application (simultaneously substitutes all placeholders within the target type)
  */
 // prettier-ignore
-export type $<T, S extends any[]> = Unpack<
-  T extends Fixed<infer U> ? { [pack]: U } :
-  T extends _<infer N> ? { [pack]: S[N] } :
-  T extends undefined | null | boolean | string | number ? { [pack]: T } :
-  T extends (infer A)[] ? {
-    [pack]: T extends { length: keyof TupleTable }
-      ? TupleTable<T, S>[T['length']]
+export type $<T, S extends any[]> = (
+  T extends Fixed<infer U> ? { [indirect]: U } :
+  T extends _<infer N> ? { [indirect]: S[N] } :
+  T extends undefined | null | boolean | string | number ? { [indirect]: T } :
+  T extends (infer A)[] & { length: infer L } ? {
+    [indirect]: L extends keyof TupleTable
+      ? TupleTable<T, S>[L]
       : $<A, S>[]
   } :
-  T extends (...x: infer I) => infer O ? { [pack]: (...x: $<I, S>) => $<O, S> } :
-  T extends object ? { [pack]: { [K in keyof T]: $<T[K], S> } } :
-  { [pack]: T }
->;
+  T extends (...x: infer I) => infer O ? { [indirect]: (...x: $<I, S>) => $<O, S> } :
+  T extends object ? { [indirect]: { [K in keyof T]: $<T[K], S> } } :
+  { [indirect]: T }
+)[typeof indirect];
 
+/**
+ * Used as a level of indirection to avoid circularity errors.
+ */
+declare const indirect: unique symbol;
+
+/**
+ * Allows looking up the type for a tuple based on its `length`, instead of trying
+ * each possibility one by one in a single long conditional.
+ */
 // prettier-ignore
 type TupleTable<T extends any[] = any, S extends any[] = any> = {
   0: [];
@@ -99,9 +108,6 @@ type TupleTable<T extends any[] = any, S extends any[] = any> = {
       $<A0, S>, $<A1, S>, $<A2, S>, $<A3, S>, $<A4, S>, $<A5, S>, $<A6, S>, $<A7, S>, $<A8, S>, $<A9, S>
     ] : never
 }
-
-declare const pack: unique symbol;
-type Unpack<T extends { [pack]: any }> = T[typeof pack];
 
 // Some familiar type classes...
 
