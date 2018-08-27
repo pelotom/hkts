@@ -1,4 +1,4 @@
-import { $, Fixed, _ } from '.';
+import { $, _ } from '.';
 
 export interface Setoid<T> {
   equals: (x: T, y: T) => boolean;
@@ -35,7 +35,7 @@ export interface Filterable<T> {
 export interface Functor<T> {
   map: <A, B>(f: (x: A) => B, t: $<T, [A]>) => $<T, [B]>;
 }
-export const Functor = <T>(spec: Functor<T>): Functor<T> => spec;
+export const Functor = <T>(spec: Functor<T>) => spec;
 
 export interface Bifunctor<T> {
   bimap: <A, B, C, D>(f: (x: A) => B, g: (x: C) => D, t: $<T, [A, C]>) => $<T, [B, D]>;
@@ -44,10 +44,10 @@ export interface Bifunctor<T> {
 }
 export const Bifunctor = <T>({ bimap }: Pick<Bifunctor<T>, 'bimap'>): Bifunctor<T> => ({
   bimap,
-  first: <A, B>(t: $<T, [A, B]>): Functor<$<T, [_, Fixed<B>]>> => ({
+  first: <A, B>(t: $<T, [A, B]>) => ({
     map: (f, u) => bimap(f, x => x, u),
   }),
-  second: <A, B>(t: $<T, [A, B]>): Functor<$<T, [Fixed<A>, _]>> => ({
+  second: <A, B>(t: $<T, [A, B]>) => ({
     map: (f, u) => bimap(x => x, f, u),
   }),
 });
