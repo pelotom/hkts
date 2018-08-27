@@ -1,12 +1,12 @@
-import { Bifunctor, Monad, _, _1, _0, Functor, $, Fixed } from '.';
+import { Bifunctor, Fixed, Monad, _, _0, _1 } from '.';
 
 it('array', () => {
   const { map, join } = Monad<_[]>({
-    pure: x => [x],
-    bind: (xs, f) => xs.map(f).reduce((xs, ys) => xs.concat(ys), []),
+    of: x => [x],
+    chain: (f, xs) => xs.map(f).reduce((xs, ys) => xs.concat(ys), []),
   });
 
-  const result = map(join([[42]]), n => n + 1);
+  const result = map(n => n + 1, join([[42]]));
   expect(result).toEqual([43]);
 });
 
@@ -16,11 +16,11 @@ it('maybe', () => {
   const some = <A>(value: A): Maybe<A> => ({ tag: 'some', value });
 
   const { map, join } = Monad<Maybe<_>>({
-    pure: some,
-    bind: (ma, f) => (ma.tag === 'some' ? f(ma.value) : ma),
+    of: some,
+    chain: (f, ma) => (ma.tag === 'some' ? f(ma.value) : ma),
   });
 
-  const result = map(join<number>(some(some(42))), n => n + 1);
+  const result = map(n => n + 1, join<number>(some(some(42))));
   expect(result).toEqual(some(43));
 });
 
@@ -30,15 +30,15 @@ it('list', () => {
   const cons = <A>(head: A, tail: List<A> = nil): List<A> => ({ tag: 'cons', head, tail });
   const concat = <A>(xs: List<A>, ys: List<A>): List<A> =>
     xs.tag === 'nil' ? ys : cons(xs.head, concat(xs.tail, ys));
-  const bindList = <A, B>(xs: List<A>, f: (a: A) => List<B>): List<B> =>
-    xs.tag === 'nil' ? nil : concat(f(xs.head), bindList(xs.tail, f));
+  const chainList = <A, B>(f: (a: A) => List<B>, xs: List<A>): List<B> =>
+    xs.tag === 'nil' ? nil : concat(f(xs.head), chainList(f, xs.tail));
 
   const { map, join } = Monad<List<_>>({
-    pure: x => cons(x, nil),
-    bind: bindList,
+    of: x => cons(x, nil),
+    chain: chainList,
   });
 
-  const result = map(join<number>(cons(cons(42))), n => n + 1);
+  const result = map(n => n + 1, join<number>(cons(cons(42))));
   expect(result).toEqual(cons(43));
 });
 
@@ -48,31 +48,34 @@ describe('either', () => {
   const right = <B>(right: B): Either<never, B> => ({ tag: 'right', right });
 
   it('bifunctor', () => {
-    const { bimap } = Bifunctor<Either<_0, _1>>({
-      bimap: (fab, f, g) => (fab.tag === 'left' ? left(f(fab.left)) : right(g(fab.right))),
+    const { bimap, first, second } = Bifunctor<Either<_0, _1>>({
+      bimap: (f, g, fab) => (fab.tag === 'left' ? left(f(fab.left)) : right(g(fab.right))),
     });
 
     const l = (x: number): boolean => !(x % 2);
     const r = (y: boolean): string => String(y);
 
     const input1: Either<number, boolean> = left(2);
-    const result1 = bimap(input1, l, r);
+    const result1 = bimap(l, r, input1);
     expect(result1).toEqual(left(true));
 
     const input2: Either<number, boolean> = right(true);
-    const result2 = bimap(input2, l, r);
+    const result2 = bimap(l, r, input2);
     expect(result2).toEqual(right('true'));
+
+    expect(first(result2).map(x => !x, result2)).toEqual(right('true'));
+    expect(second(result2).map(x => x.length, result2)).toEqual(right(4));
   });
 
   it('monad', () => {
     const RightMonad = <L>() =>
       Monad<Either<Fixed<L>, _>>({
-        pure: right,
-        bind: (ma, f) => (ma.tag === 'left' ? ma : f(ma.right)),
+        of: right,
+        chain: (f, ma) => (ma.tag === 'left' ? ma : f(ma.right)),
       });
 
     const either: Either<string, number> = right(42);
-    const result = RightMonad<string>().map(either, n => n + 1);
+    const result = RightMonad<string>().map(n => n + 1, either);
     expect(result).toEqual(right(43));
   });
 });

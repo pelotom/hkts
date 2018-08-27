@@ -1,4 +1,4 @@
-import { $ } from '.';
+import { $, _, Fixed } from '.';
 
 export interface Setoid<T> {
   equals: (x: T, y: T) => boolean;
@@ -35,10 +35,22 @@ export interface Filterable<T> {
 export interface Functor<T> {
   map: <A, B>(f: (x: A) => B, ta: $<T, [A]>) => $<T, [B]>;
 }
+export const Functor = <T>(spec: Functor<T>): Functor<T> => spec;
 
 export interface Bifunctor<T> {
   bimap: <A, B, C, D>(f: (x: A) => B, g: (x: C) => D, t: $<T, [A, C]>) => $<T, [B, D]>;
+  first: <A, B>(t: $<T, [A, B]>) => Functor<$<T, [_, B]>>;
+  second: <A, B>(t: $<T, [A, B]>) => Functor<$<T, [A, _]>>;
 }
+export const Bifunctor = <T>({ bimap }: Pick<Bifunctor<T>, 'bimap'>): Bifunctor<T> => ({
+  bimap,
+  first: <A, B>(t: $<T, [A, B]>): Functor<$<T, [_, Fixed<B>]>> => ({
+    map: (f, u) => bimap(f, x => x, u),
+  }),
+  second: <A, B>(t: $<T, [A, B]>): Functor<$<T, [Fixed<A>, _]>> => ({
+    map: (f, u) => bimap(x => x, f, u),
+  }),
+});
 
 export interface Contravariant<T> {
   contramap: <A, B>(f: (x: A) => B, t: $<T, [B]>) => $<T, [A]>;
@@ -55,6 +67,10 @@ export interface Apply<T> extends Functor<T> {
 export interface Applicative<T> extends Apply<T> {
   of: <A>(x: A) => $<T, [A]>;
 }
+export const Applicative = <T>(A: Pick<Applicative<T>, 'ap' | 'of'>): Applicative<T> => ({
+  ...A,
+  map: (f, u) => A.ap(A.of(f), u),
+});
 
 export interface Alt<T> extends Functor<T> {
   alt: <A>(x: $<T, [A]>, y: $<T, [A]>) => $<T, [A]>;
@@ -69,8 +85,22 @@ export interface Alternative<T> extends Applicative<T>, Plus<T> {}
 export interface Chain<T> extends Apply<T> {
   chain: <A, B>(f: (x: A) => $<T, [B]>, t: $<T, [A]>) => $<T, [B]>;
 }
+export const Chain = <T>(A: Pick<Chain<T>, 'chain'> & Pick<Functor<T>, 'map'>): Chain<T> => ({
+  ...A,
+  ap: (uf, ux) => A.chain(f => A.map(f, ux), uf),
+});
 
-export interface Monad<T> extends Applicative<T>, Chain<T> {}
+export interface Monad<T> extends Applicative<T>, Chain<T> {
+  join: <A>(tt: $<T, [$<T, [A]>]>) => $<T, [A]>;
+}
+export const Monad = <T>({
+  of,
+  chain,
+}: Pick<Applicative<T>, 'of'> & Pick<Chain<T>, 'chain'>): Monad<T> => ({
+  of,
+  ...Chain({ chain, map: (f, t) => chain(x => of(f(x)), t) }),
+  join: tt => chain(t => t, tt),
+});
 
 export interface Foldable<T> {
   reduce: <A, B>(f: (x: A, y: B) => A, x: A, u: $<T, [B]>) => A;
