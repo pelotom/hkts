@@ -31,16 +31,18 @@ export interface Fixed<T> {
  * Type application (simultaneously substitutes all placeholders within the target type)
  */
 // prettier-ignore
-export type $<T, S extends any[]> =
-  T extends Fixed<infer U> ? U :
-  T extends _<infer N> ? S[N] :
-  T extends undefined | null | boolean | string | number ? T :
-  T extends Array<infer A> ? $Array<A, S> :
-  T extends (...x: infer I) => infer O ? (...x: $<I, S>) => $<O, S> :
-  T extends object ? { [K in keyof T]: $<T[K], S> } :
-  T;
+export type $<T, S extends any[]> = Unpack<
+  T extends Fixed<infer U> ? { [pack]: U } :
+  T extends _<infer N> ? { [pack]: S[N] } :
+  T extends undefined | null | boolean | string | number ? { [pack]: T } :
+  T extends Array<infer A> ? { [pack]: $<A, S>[] } :
+  T extends (...x: infer I) => infer O ? { [pack]: (...x: $<I, S>) => $<O, S> } :
+  T extends object ? { [pack]: { [K in keyof T]: $<T[K], S> } } :
+  { [pack]: T }
+>;
 
-export interface $Array<T, S extends any[]> extends Array<$<T, S>> {}
+declare const pack: unique symbol;
+type Unpack<T extends { [pack]: any }> = T[typeof pack];
 
 // Some familiar type classes...
 

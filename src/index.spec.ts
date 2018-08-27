@@ -6,7 +6,7 @@ it('array', () => {
     bind: (xs, f) => xs.map(f).reduce((xs, ys) => xs.concat(ys), []),
   });
 
-  const result = map(join<number>([[42]]), n => n + 1);
+  const result = map(join([[42]]), n => n + 1);
   expect(result).toEqual([43]);
 });
 
