@@ -24,7 +24,7 @@ const MaybeFunctor: Functor<Maybe<_>> = {
 };
 ```
 
-Notice that we are supplying the `Maybe` type constructor with the placeholder type `_`; this causes it to be come a fully saturated type so that we can pass it to `Functor`, but with all former occurrences of the type parameter clearly marked, so that they can be re-substituted using the `$` operator. A type application then `$<T, S>` recursively walks the tree of type `T`, substituting any placeholders `_<N>` it finds with the corresponding argument type `S[N]`. `_` is shorthand for `_<0>`, and there are also placeholder aliases `_0 = _<0>`, `_1 = _<1>`, etc.
+Notice that we are supplying the `Maybe` type constructor with the placeholder type `_`; this causes it to be come a fully saturated type so that we can pass it to `Functor`, but with all former occurrences of the type parameter clearly marked, so that they can be re-substituted using the `$` operator. A type application `$<T, S>` then recursively walks the tree of type `T`, substituting any placeholders `_<N>` it finds with the corresponding argument type `S[N]`. `_` is shorthand for `_<0>`, and there are also placeholder aliases `_0 = _<0>`, `_1 = _<1>`, etc.
 
 That's pretty much all there is to it! Take a look at [the tests](https://github.com/pelotom/hkts/blob/master/src/index.spec.ts) for more examples.
 
