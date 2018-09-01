@@ -2,7 +2,7 @@
 
 ## Overview
 
-TypeScript [doesn't directly support higher-kinded types yet](https://github.com/Microsoft/TypeScript/issues/1213), but various attempts have been made to simulate them (see [related work](https://github.com/pelotom/hkts/blob/master/README.md#related-work) at the bottom). This project is one such idea, which attempts to solve the problem via conditional types.
+TypeScript [doesn't directly support higher-kinded types yet](https://github.com/Microsoft/TypeScript/issues/1213), but various attempts have been made to simulate them (see [related work](https://github.com/pelotom/hkts/blob/master/README.md#related-work) at the bottom). This project presents a new, greatly simplified approach to encoding HKTs using the power of conditional types.
 
 The idea is that a type which logically depends on a type constructor (rather than a simple type) just takes a regular type variable, and then uses the `$` operator to "apply" that variable to other types. For example, here's how we would write the [`Functor` type class as defined by static-land](https://github.com/rpominov/static-land/blob/master/docs/spec.md#functor):
 
