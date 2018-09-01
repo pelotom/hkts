@@ -90,7 +90,7 @@ When the substitution encounters a `Fixed<T>`, it will not recurse into it, but 
 ## Known limitations
 
 The type application operator `$` is able to transform most types correctly, including functions, however there are a few edge cases:
-- It can only be applied to fully-satured types, i.e. containing no (real) type parameters, only placeholders. This is `$` has no way of knowing whether a type parameter will ultimately be instantiated as a placeholder (even though it never should be). Use the `Fixed` type operator as described above to protect type parameters.
+- It can only be applied to fully-satured types, i.e. containing no (real) type parameters, only placeholders. This is because `$` has no way of knowing whether a type parameter will ultimately be instantiated as a placeholder (even though it never should be). Use the `Fixed` type operator as described above to protect type parameters.
 - Polymorphic functions will get nerfed. For example:
   ```ts
   type Id = <A>(x: A) => A
