@@ -87,7 +87,7 @@ The type application operator `$` is able to transform most types correctly, inc
   ```
   Not what you wanted! Unfortunately TypeScript's conditional types don't currently allow analyzing and reconstructing the type parameters of a function ([this feature](https://github.com/Microsoft/TypeScript/issues/5453) might solve that).
 - Tuples `[A, B, ...]` are transformed correctly up to size 10 (though we can add arbitrarily many more as needed), after which they will be transformed into an array `(A | B | ...)[]`. Correspondingly, functions of arity <= 10 are supported.
-- The `join` method of `Monad` [must be supplied a type parameter](https://github.com/pelotom/hkts/blob/5ba4734bef74e9c2b8a10a75cb1de9ce230bde37/src/index.spec.ts#L23) for some reason... I've filed [an issue about this](https://github.com/Microsoft/TypeScript/issues/26807). The good news is it's still safe; you can't provide a _wrong_ type argument without getting an error.
+- In some cases the `join` method of `Monad` [must be supplied a type parameter](https://github.com/pelotom/hkts/blob/5ba4734bef74e9c2b8a10a75cb1de9ce230bde37/src/index.spec.ts#L23)... I've filed [an issue about this](https://github.com/Microsoft/TypeScript/issues/26807). The good news is it's still safe; you can't provide a _wrong_ type argument without getting an error.
 
 ## Related work
 
