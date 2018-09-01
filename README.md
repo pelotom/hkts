@@ -4,7 +4,7 @@
 
 TypeScript [doesn't directly support higher-kinded types yet](https://github.com/Microsoft/TypeScript/issues/1213), but various attempts have been made to simulate them (see [related work](https://github.com/pelotom/hkts/blob/master/README.md#related-work) at the bottom). This project presents a new, greatly simplified approach to encoding HKTs using the power of conditional types.
 
-The idea is that, although we can't truly abstract over a type constructor `type T<A> = ...`, we _can_ abstract over the result `T<_>` of applying it to a special placeholder type `_`. Then, if we can somehow substitute all instances of `_` within a type, we effectively have the ability to "apply" `T` at arbitrary types. That is, we can effectively abstract over `T`! And it turns out we can define a substitution operator `$<T, S>` which does just that.
+The idea is that, although we can't truly abstract over a type constructor `type T<A> = ...`, we _can_ abstract over the result `T<_>` of applying it to a special placeholder type `_`. Then, if we can somehow substitute all instances of `_` within a type, we effectively have the ability to "apply" `T` at arbitrary types. That is, we can abstract over `T`! And it turns out we can define a substitution operator `$<T, S>` which does just that.
 
 Here's how we would use `$` to define the [static-land's `Functor` type class](https://github.com/rpominov/static-land/blob/master/docs/spec.md#functor):
 
