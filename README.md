@@ -4,7 +4,9 @@
 
 TypeScript [doesn't directly support higher-kinded types yet](https://github.com/Microsoft/TypeScript/issues/1213), but various attempts have been made to simulate them (see [related work](https://github.com/pelotom/hkts/blob/master/README.md#related-work) at the bottom). This project presents a new, greatly simplified approach to encoding HKTs using the power of conditional types.
 
-The idea is that a type which logically depends on a type constructor (rather than a simple type) just takes a regular type variable, and then uses the `$` operator to "apply" that variable to other types. For example, here's how we would write the [`Functor` type class as defined by static-land](https://github.com/rpominov/static-land/blob/master/docs/spec.md#functor):
+The idea is that, although we can't truly abstract over a type constructor `type T<A> = ...`, we _can_ abstract over the result `T<_>` of applying it to a special placeholder type `_`. Then, if we can somehow substitute all instances of `_` within a type, we effectively have the ability to "apply" `T` at arbitrary types. That is, we can effectively abstract over `T`! And it turns out we can define a substitution operator `$<T, S>` which does just that.
+
+Here's how we would use `$` to define the [static-land's `Functor` type class](https://github.com/rpominov/static-land/blob/master/docs/spec.md#functor):
 
 ```ts
 interface Functor<T> {
@@ -20,15 +22,13 @@ const none: Maybe<never> = { tag: 'none' };
 const some = <A>(value: A): Maybe<A> => ({ tag: 'some', value });
 ```
 
-We can define a `Functor` instance for it like so:
+we can define a `Functor` instance for it like so, using the placeholder type `_`:
 
 ```ts
 const MaybeFunctor: Functor<Maybe<_>> = {
   map: (f, maybe) => maybe.tag === 'none' ? none : some(f(maybe.value)),
 };
 ```
-
-Notice that we are supplying the `Maybe` type constructor with the placeholder type `_`; this causes it to be come a fully saturated type so that we can pass it to `Functor`, but with all former occurrences of the type parameter clearly marked, so that they can be re-substituted using the `$` operator. A type application `$<T, S>` then recursively walks the tree of type `T`, substituting any placeholders `_<N>` it finds with the corresponding argument type `S[N]`. `_` is shorthand for `_<0>`, and there are also placeholder aliases `_0 = _<0>`, `_1 = _<1>`, etc.
 
 Take a look at [the tests](https://github.com/pelotom/hkts/blob/master/src/index.spec.ts) for more examples.
 
@@ -48,7 +48,7 @@ expect(MaybeMonad.map(n => n + 1, some(42))).toBe(some(43));
 
 ## Abstracting over kinds of higher arity
 
-As alluded to above, the type `S` of `$<T, S>` is a tuple of types `[S0, S1, ..., SN]` to be substituted for the corresponding placeholders `_0`, `_1`, ..., `_<N>`. This allows us to define for example `Bifunctor` in a straightforward way:
+You may have noticed in the above example that `$` takes an array of substitution types as its second parameter. There are also placeholders `_0` (an alias for `_`), `_1`, `_2`, ..., `_<N>`. `$<T, S>` simultaneously replaces `_0` with `S[0]`, `_1` with `S[1]`, and so on, throughout `T`. This allows us to define, for example, `Bifunctor`, which abstracts over a type constructor of kind `(*, *) -> *`:
 
 ```ts
 interface Bifunctor<T> {
@@ -57,7 +57,7 @@ interface Bifunctor<T> {
 }
 ```
 
-and a `Bifunctor` instance for `Either` using placeholders `_0` and `_1`:
+A `Bifunctor` instance for `Either` looks like
 
 ```ts
 type EitherBifunctor: Bifunctor<Either<_0, _1>> = {
