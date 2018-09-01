@@ -76,7 +76,7 @@ const RightMonad = <L>() => Monad<Either<L, _>>({
 });
 ```
 
-Unfortunately here we run into a problem, because the type application `$` will get stuck on our type parameter `L` (see [known limitations](https://github.com/pelotom/hkts/blob/master/README.md#related-work)). We need to mark any type parameters that are extaneous to the type class using the `Fixed` operator, like so:
+Unfortunately here we run into a problem, because the type application `$` will get stuck on our type parameter `L` (see [known limitations](https://github.com/pelotom/hkts/blob/master/README.md#related-work)). Fortunately the workaround is pretty simple: we mark any extraneous type parameters with the `Fixed` operator, like so:
 
 ```ts
 const RightMonad = <L>() => Monad<Either<Fixed<L>, _>>({
