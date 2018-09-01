@@ -58,7 +58,7 @@ interface Bifunctor<T> {
 }
 ```
 
-Given an `Either` type constructor
+Then given an `Either` type constructor
 
 ```ts
 type Either<A, B> = { tag: 'left'; left: A } | { tag: 'right'; right: B };
