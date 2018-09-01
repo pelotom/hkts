@@ -14,7 +14,7 @@ interface Functor<T> {
 }
 ```
 
-Then, supposing we have a `Maybe` type
+Then, supposing we have a `Maybe` type constructor
 
 ```ts
 type Maybe<A> = { tag: 'none' } | { tag: 'some'; value: A };
@@ -58,7 +58,15 @@ interface Bifunctor<T> {
 }
 ```
 
-A `Bifunctor` instance for `Either` looks like
+Given an `Either` type constructor
+
+```ts
+type Either<A, B> = { tag: 'left'; left: A } | { tag: 'right'; right: B };
+const left = <A>(left: A): Either<A, never> => ({ tag: 'left', left });
+const right = <B>(right: B): Either<never, B> => ({ tag: 'right', right });
+```
+
+a `Bifunctor` instance for it looks like
 
 ```ts
 type EitherBifunctor: Bifunctor<Either<_0, _1>> = {
