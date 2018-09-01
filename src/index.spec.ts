@@ -69,13 +69,13 @@ describe('either', () => {
 
   it('monad', () => {
     const RightMonad = <L>() =>
-      Monad<Either<Fixed<L>, _>>({
+      Monad<Either<L, _>>({
         of: right,
         chain: (f, ma) => (ma.tag === 'left' ? ma : f(ma.right)),
       });
 
-    const either: Either<string, number> = right(42);
-    const result = RightMonad<string>().map(n => n + 1, either);
+    const either = right(42);
+    const result = RightMonad().map(n => n + 1, either);
     expect(result).toEqual(right(43));
   });
 });

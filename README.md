@@ -76,21 +76,9 @@ const RightMonad = <L>() => Monad<Either<L, _>>({
 });
 ```
 
-Unfortunately here we run into a problem, because the type application `$` will get stuck on our type parameter `L` (see [known limitations](https://github.com/pelotom/hkts/blob/master/README.md#related-work)). Fortunately the workaround is pretty simple: we mark any extraneous type parameters with the `Fixed` operator, like so:
-
-```ts
-const RightMonad = <L>() => Monad<Either<Fixed<L>, _>>({
-  pure: right,
-  bind: (ma, f) => (ma.tag === 'left' ? ma : f(ma.right)),
-});
-```
-
-When the substitution encounters a `Fixed<T>`, it will not recurse into it, but simply evaluate to `T`.
-
 ## Known limitations
 
 The type application operator `$` is able to transform most types correctly, including functions, however there are a few edge cases:
-- It can only be applied to fully-satured types, i.e. containing no (real) type parameters, only placeholders. This is because `$` has no way of knowing whether a type parameter will ultimately be instantiated as a placeholder (even though it never should be). Use the `Fixed` type operator as described above to protect type parameters.
 - Polymorphic functions will get nerfed. For example:
   ```ts
   type Id = <A>(x: A) => A
