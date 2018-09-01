@@ -28,6 +28,7 @@ we can define a `Functor` instance for it like so, using the placeholder type `_
 const MaybeFunctor: Functor<Maybe<_>> = {
   map: (f, maybe) => maybe.tag === 'none' ? none : some(f(maybe.value)),
 };
+expect(MaybeFunctor.map(n => n + 1, some(42))).toEqual(some(43));
 ```
 
 Take a look at [the tests](https://github.com/pelotom/hkts/blob/master/src/index.spec.ts) for more examples.
