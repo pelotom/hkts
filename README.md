@@ -85,7 +85,7 @@ The type application operator `$` is able to transform most types correctly, inc
   type NerfedId = $<Id, []>;
   // type NerfedId = (x_0: {}) => {}
   ```
-  Not what you wanted! Unfortunately TypeScript's conditional types don't currently allow analyzing and reconstructing the type parameters of a function (https://github.com/Microsoft/TypeScript/issues/5453 might solve that). You can protect polymorphic types with `Fixed` as well, although then they can't contain placeholders, so that's probably not of much use to you.
+  Not what you wanted! Unfortunately TypeScript's conditional types don't currently allow analyzing and reconstructing the type parameters of a function (https://github.com/Microsoft/TypeScript/issues/5453 might solve that).
 - Tuples `[A, B, ...]` are transformed correctly up to size 10 (though we can add arbitrarily many more as needed), after which they will be transformed into an array `(A | B | ...)[]`. Correspondingly, functions of arity <= 10 are supported.
 - The `join` method of `Monad` [must be supplied a type parameter](https://github.com/pelotom/hkts/blob/5ba4734bef74e9c2b8a10a75cb1de9ce230bde37/src/index.spec.ts#L23) for some reason... I've filed https://github.com/Microsoft/TypeScript/issues/26807 for this. The good news is it's still safe; you can't provide a _wrong_ type argument without getting an error.
 
