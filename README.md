@@ -24,7 +24,7 @@ We can define a `Functor` instance for it like so:
 
 ```ts
 const MaybeFunctor: Functor<Maybe<_>> = {
-  map: (f, t) => t.tag === 'none' ? none : some(f(t.value)),
+  map: (f, maybe) => maybe.tag === 'none' ? none : some(f(maybe.value)),
 };
 ```
 
@@ -39,7 +39,7 @@ This package defines [a set of interfaces](https://github.com/pelotom/hkts/blob/
 ```ts
 const MaybeMonad = Monad<Maybe<_>>({
   of: some,
-  chain: (f, t) => t.tag === 'none' ? none : f(t.value),
+  chain: (f, maybe) => maybe.tag === 'none' ? none : f(maybe.value),
 });
 
 // Use the `map` method, which we didn't have to define:
@@ -61,7 +61,7 @@ and a `Bifunctor` instance for `Either` using placeholders `_0` and `_1`:
 
 ```ts
 type EitherBifunctor: Bifunctor<Either<_0, _1>> = {
-  bimap: (f, g, t) => (t.tag === 'left' ? left(f(t.left)) : right(g(t.right))),
+  bimap: (f, g, either) => (either.tag === 'left' ? left(f(either.left)) : right(g(either.right))),
 };
 ```
 
@@ -71,8 +71,8 @@ Suppose we want to ignore one or more of the parameters of a type constructor fo
 
 ```ts
 const RightMonad = <L>() => Monad<Either<L, _>>({
-  pure: right,
-  bind: (ma, f) => (ma.tag === 'left' ? ma : f(ma.right)),
+  of: right,
+  chain: (f, either) => either.tag === 'left' ? either : f(either.right),
 });
 ```
 

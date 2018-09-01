@@ -1,4 +1,4 @@
-import { Bifunctor, Fixed, Monad, _, _0, _1 } from '.';
+import { Bifunctor, Monad, _, _0, _1 } from '.';
 
 it('array', () => {
   const { map, join } = Monad<_[]>({
@@ -17,7 +17,7 @@ it('maybe', () => {
 
   const { map, join } = Monad<Maybe<_>>({
     of: some,
-    chain: (f, ma) => (ma.tag === 'some' ? f(ma.value) : ma),
+    chain: (f, maybe) => (maybe.tag === 'none' ? none : f(maybe.value)),
   });
 
   const result = map(n => n + 1, join<number>(some(some(42))));
@@ -30,7 +30,7 @@ it('list', () => {
   const cons = <A>(head: A, tail: List<A> = nil): List<A> => ({ tag: 'cons', head, tail });
   const concat = <A>(xs: List<A>, ys: List<A>): List<A> =>
     xs.tag === 'nil' ? ys : cons(xs.head, concat(xs.tail, ys));
-  const chainList = <A, B>(f: (a: A) => List<B>, xs: List<A>): List<B> =>
+  const chainList = <A, B>(f: (x: A) => List<B>, xs: List<A>): List<B> =>
     xs.tag === 'nil' ? nil : concat(f(xs.head), chainList(f, xs.tail));
 
   const { map, join } = Monad<List<_>>({
@@ -49,7 +49,8 @@ describe('either', () => {
 
   it('bifunctor', () => {
     const { bimap, first, second } = Bifunctor<Either<_0, _1>>({
-      bimap: (f, g, fab) => (fab.tag === 'left' ? left(f(fab.left)) : right(g(fab.right))),
+      bimap: (f, g, either) =>
+        either.tag === 'left' ? left(f(either.left)) : right(g(either.right)),
     });
 
     const l = (x: number): boolean => !(x % 2);
@@ -71,7 +72,7 @@ describe('either', () => {
     const RightMonad = <L>() =>
       Monad<Either<L, _>>({
         of: right,
-        chain: (f, ma) => (ma.tag === 'left' ? ma : f(ma.right)),
+        chain: (f, either) => (either.tag === 'left' ? either : f(either.right)),
       });
 
     const either = right(42);
