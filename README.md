@@ -32,8 +32,6 @@ const MaybeFunctor: Functor<Maybe<_>> = {
 expect(MaybeFunctor.map(n => n + 1, some(42))).toEqual(some(43));
 ```
 
-Take a look at [the tests](https://github.com/pelotom/hkts/blob/master/src/index.spec.ts) for more examples.
-
 ## Type classes and instance factories
 
 This package defines [a set of interfaces](https://github.com/pelotom/hkts/blob/master/src/static-land.ts) corresponding to the the type classes of the [static-land spec](https://github.com/rpominov/static-land), as well as factory functions for producing instances thereof. For example, there is a `Monad` interface as well as a `Monad` function. The function takes as arguments only the minimum data needed (`of` and `chain`) to produce an implementation of the full `Monad` interface (which includes other derived methods like `map`, `ap` and `join`). So again using the `Maybe` type above, we can construct a `Monad` instance like so:
