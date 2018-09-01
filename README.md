@@ -29,6 +29,7 @@ const MaybeFunctor: Functor<Maybe<_>> = {
   map: (f, maybe) => maybe.tag === 'none' ? none : some(f(maybe.value)),
 };
 
+// It works!
 expect(MaybeFunctor.map(n => n + 1, some(42))).toEqual(some(43));
 ```
 
