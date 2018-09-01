@@ -67,7 +67,7 @@ type EitherBifunctor: Bifunctor<Either<_0, _1>> = {
 
 ## Fixing type parameters
 
-Some trickiness arises when we want to ignore one or more of the parameters of a type constructor for the purpose of making it an instance of a type class. For example we can make a `Monad` out of `Either` by ignoring its first parameter and using the second parameter as the "hole" of the monad. The way to do this is to make a polymorphic instance creation function which can produce a `Monad` instance _for any given left type `L`_:
+Suppose we want to ignore one or more of the parameters of a type constructor for the purpose of making it an instance of a type class. For example we can make a `Monad` out of `Either` by ignoring its first parameter and using the second parameter as the "hole" of the monad. The way to do this is to make a polymorphic instance creation function which can produce a `Monad` instance _for any given left type `L`_:
 
 ```ts
 const RightMonad = <L>() => Monad<Either<L, _>>({
